@@ -1,0 +1,203 @@
+{
+  "id": "software_engineer",
+  "name": "Software Engineer",
+  "tagline": "Design and ship robust systems that stand the test of scale.",
+  "icon": "code-2",
+  "accent": "#0ea5e9",
+  "difficulty": "Intermediate",
+  "duration_weeks": 36,
+  "position": "upper_left",
+  "description": "Core computer science, systems design, and the craft of building software that lasts.",
+  "pillars": [
+    "Fundamentals",
+    "Systems Design",
+    "Backend",
+    "Quality",
+    "Delivery"
+  ],
+  "milestones": [
+    {
+      "id": "se-m1",
+      "title": "Data Structures & Algorithms",
+      "pillar": "Fundamentals",
+      "difficulty": "Intermediate",
+      "hours": 45,
+      "learning_goal": "Reason about time and space, and pick the right structure for the job.",
+      "topics": [
+        "Big-O",
+        "Arrays & hashing",
+        "Trees & graphs",
+        "Dynamic programming"
+      ],
+      "resources": [
+        {
+          "label": "NeetCode",
+          "url": "https://neetcode.io/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Pathfinding Visualizer",
+        "brief": "Build an interactive visualizer for BFS/DFS/A*."
+      },
+      "deliverables": [
+        "Visualizer app",
+        "3 algorithms",
+        "Complexity notes"
+      ],
+      "reflection_prompt": "Which structure changed your solution's complexity class?"
+    },
+    {
+      "id": "se-m2",
+      "title": "Object-Oriented & Clean Design",
+      "pillar": "Fundamentals",
+      "difficulty": "Intermediate",
+      "hours": 30,
+      "learning_goal": "Model problems with cohesive, loosely-coupled abstractions.",
+      "topics": [
+        "SOLID",
+        "Design patterns",
+        "Composition",
+        "Refactoring"
+      ],
+      "resources": [
+        {
+          "label": "Refactoring Guru",
+          "url": "https://refactoring.guru/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Domain Model Kata",
+        "brief": "Model a real domain and refactor toward SOLID."
+      },
+      "deliverables": [
+        "Class diagram",
+        "Refactor log",
+        "Tests"
+      ],
+      "reflection_prompt": "Which pattern removed the most duplication?"
+    },
+    {
+      "id": "se-m3",
+      "title": "APIs & Backend Services",
+      "pillar": "Backend",
+      "difficulty": "Intermediate",
+      "hours": 40,
+      "learning_goal": "Design HTTP APIs that are predictable, documented, and safe.",
+      "topics": [
+        "REST",
+        "Auth",
+        "Validation",
+        "OpenAPI",
+        "Rate limiting"
+      ],
+      "resources": [
+        {
+          "label": "Flask Docs",
+          "url": "https://flask.palletsprojects.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Production-Grade API",
+        "brief": "Ship a documented API with auth and tests."
+      },
+      "deliverables": [
+        "OpenAPI spec",
+        "Auth flow",
+        "Integration tests"
+      ],
+      "reflection_prompt": "How does your API fail gracefully under bad input?"
+    },
+    {
+      "id": "se-m4",
+      "title": "Databases & Persistence",
+      "pillar": "Backend",
+      "difficulty": "Advanced",
+      "hours": 35,
+      "learning_goal": "Choose and use the right store, and keep data consistent.",
+      "topics": [
+        "Transactions",
+        "Indexing",
+        "Migrations",
+        "NoSQL vs SQL",
+        "Caching"
+      ],
+      "resources": [
+        {
+          "label": "Designing Data-Intensive Apps",
+          "url": "https://dataintensive.net/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Migration-Safe Schema",
+        "brief": "Evolve a schema across versions with zero downtime."
+      },
+      "deliverables": [
+        "Migration scripts",
+        "Index plan",
+        "Backup strategy"
+      ],
+      "reflection_prompt": "What breaks if two writes race?"
+    },
+    {
+      "id": "se-m5",
+      "title": "Systems Design",
+      "pillar": "Systems Design",
+      "difficulty": "Advanced",
+      "hours": 45,
+      "learning_goal": "Design systems that scale in load, data, and team size.",
+      "topics": [
+        "Load balancing",
+        "Queues",
+        "Caching",
+        "Consistency",
+        "Sharding"
+      ],
+      "resources": [
+        {
+          "label": "System Design Primer",
+          "url": "https://github.com/donnemartin/system-design-primer"
+        }
+      ],
+      "weekend_project": {
+        "title": "Design a URL Shortener",
+        "brief": "Produce a full design doc with tradeoffs."
+      },
+      "deliverables": [
+        "Design doc",
+        "Capacity estimate",
+        "Failure modes"
+      ],
+      "reflection_prompt": "Where is your single point of failure?"
+    },
+    {
+      "id": "se-m6",
+      "title": "Testing, CI/CD & Delivery",
+      "pillar": "Delivery",
+      "difficulty": "Advanced",
+      "hours": 30,
+      "learning_goal": "Automate quality so shipping is boring and safe.",
+      "topics": [
+        "Test pyramid",
+        "CI pipelines",
+        "Feature flags",
+        "Observability"
+      ],
+      "resources": [
+        {
+          "label": "The DevOps Handbook",
+          "url": "https://itrevolution.com/product/the-devops-handbook/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Zero-to-Deploy Pipeline",
+        "brief": "Automate build, test, and deploy for a service."
+      },
+      "deliverables": [
+        "CI pipeline",
+        "Deploy script",
+        "Dashboards"
+      ],
+      "reflection_prompt": "How fast can you safely roll back?"
+    }
+  ]
+}

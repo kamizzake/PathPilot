@@ -1,0 +1,194 @@
+{% extends "base.html" %} {% from "_macros.html" import ring %} {% block title
+%}Statistics{% endblock %} {% block content %}
+<div class="topbar rise">
+	<div>
+		<div class="eyebrow">{{ roadmap.name }}</div>
+		<h1>Statistics</h1>
+		<div class="sub">
+			Your progress, measured. Switch tabs — the page stays put.
+		</div>
+	</div>
+</div>
+
+<div class="tabs" id="tabs">
+	<button class="tab active" data-tab="overview">Overview</button>
+	<button class="tab" data-tab="study">Study</button>
+	<button class="tab" data-tab="projects">Projects</button>
+	<button class="tab" data-tab="roadmaps">Roadmaps</button>
+	<button class="tab" data-tab="pillars">Career pillars</button>
+	<button class="tab" data-tab="activity">Activity</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="tab-panel active" data-panel="overview">
+	<div class="stat-cards">
+		<div class="card mini-stat">
+			<div class="ico"><i data-lucide="flag"></i></div>
+			<div class="stat-num">
+				{{ stats.milestones_done }}<span
+					style="font-size: 20px; color: var(--ink-4)"
+					>/{{ stats.milestones_total }}</span
+				>
+			</div>
+			<div class="stat-label">Milestones complete</div>
+		</div>
+		<div class="card mini-stat">
+			<div class="ico"><i data-lucide="clock"></i></div>
+			<div class="stat-num">
+				{{ stats.done_hours }}<span style="font-size: 20px; color: var(--ink-4)"
+					>h</span
+				>
+			</div>
+			<div class="stat-label">of {{ stats.total_hours }}h invested</div>
+		</div>
+		<div class="card mini-stat">
+			<div class="ico"><i data-lucide="flame"></i></div>
+			<div class="stat-num">{{ stats.streak }}</div>
+			<div class="stat-label">Day streak</div>
+		</div>
+		<div class="card mini-stat">
+			<div class="ico"><i data-lucide="folder-git-2"></i></div>
+			<div class="stat-num">
+				{{ stats.projects_done }}<span
+					style="font-size: 20px; color: var(--ink-4)"
+					>/{{ stats.projects_total }}</span
+				>
+			</div>
+			<div class="stat-label">Projects shipped</div>
+		</div>
+	</div>
+	<div class="stat-two">
+		<div class="card" style="display: flex; flex-direction: column">
+			<div class="card-h">
+				<h3><i data-lucide="bar-chart-3"></i> Milestone progress</h3>
+			</div>
+			<div class="chart-box"><canvas id="msChart"></canvas></div>
+		</div>
+		<div
+			class="card"
+			style="
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			">
+			<div class="card-h" style="width: 100%">
+				<h3><i data-lucide="gauge"></i> Overall</h3>
+			</div>
+			{{ ring(stats.roadmap_percent, 150, 12) }}
+			<div class="stat-label" style="margin-top: 14px">Roadmap completion</div>
+		</div>
+	</div>
+</div>
+
+<!-- STUDY -->
+<div class="tab-panel" data-panel="study">
+	<div class="card" style="flex: 1; display: flex; flex-direction: column">
+		<div class="card-h">
+			<h3><i data-lucide="clock"></i> Hours by pillar</h3>
+		</div>
+		<div class="chart-box"><canvas id="studyChart"></canvas></div>
+	</div>
+</div>
+
+<!-- PROJECTS -->
+<div class="tab-panel" data-panel="projects">
+	<div class="stat-two">
+		<div class="card" style="display: flex; flex-direction: column">
+			<div class="card-h">
+				<h3><i data-lucide="kanban"></i> Projects by status</h3>
+			</div>
+			<div class="chart-box"><canvas id="projChart"></canvas></div>
+		</div>
+		<div
+			class="card"
+			style="display: flex; flex-direction: column; min-height: 0">
+			<div class="card-h">
+				<h3><i data-lucide="list"></i> All projects</h3>
+			</div>
+			<div class="scroll-y" style="flex: 1">
+				{% for p in projects %}
+				<div class="up-item">
+					<span class="up-dot" style="background: var(--accent)"></span
+					><span class="t">{{ p.title }}</span
+					><span class="pill muted">{{ p.status|titlecase }}</span>
+				</div>
+				{% else %}
+				<div class="empty"><div>No projects yet.</div></div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ROADMAPS -->
+<div class="tab-panel" data-panel="roadmaps">
+	<div class="card" style="flex: 1; display: flex; flex-direction: column">
+		<div class="card-h">
+			<h3><i data-lucide="route"></i> Completion across all roadmaps</h3>
+		</div>
+		<div class="chart-box"><canvas id="rmChart"></canvas></div>
+	</div>
+</div>
+
+<!-- PILLARS -->
+<div class="tab-panel" data-panel="pillars">
+	<div class="card" style="flex: 1; overflow-y: auto">
+		<div class="card-h">
+			<h3><i data-lucide="columns-3"></i> Career pillars</h3>
+		</div>
+		<div class="pillar-grid" style="padding: 10px 0">
+			{% for p in pillars %}
+			<div class="pillar-card">
+				{{ ring(p.percent, 100, 10) }}
+				<div class="pname">{{ p.name }}</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+
+<!-- ACTIVITY -->
+<div class="tab-panel" data-panel="activity">
+	<div
+		class="card"
+		style="flex: 1; display: flex; flex-direction: column; min-height: 0">
+		<div class="card-h">
+			<h3><i data-lucide="activity"></i> Activity log</h3>
+		</div>
+		<div class="act-list scroll-y" style="flex: 1">
+			{% for a in activity %}
+			<div class="act-item">
+				<div class="act-icon">
+					<i
+						data-lucide="{{ 'check' if a.kind=='complete' else 'git-commit-horizontal' if a.kind=='progress' else 'folder' if a.kind=='project' else 'sparkles' }}"></i>
+				</div>
+				<span class="lbl">{{ a.label }}</span>
+			</div>
+			{% else %}
+			<div class="empty"><div>No activity recorded.</div></div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %} {% block scripts %}
+<script id="statData" type="application/json">
+	{
+	  "milestones": {{ roadmap.milestones|map(attribute='title')|list|tojson }},
+	  "milestonePercents": {{ roadmap.milestones|map(attribute='percent')|list|tojson }},
+	  "milestonePillars": {{ roadmap.milestones|map(attribute='pillar')|list|tojson }},
+	  "milestoneHours": {{ roadmap.milestones|map(attribute='hours')|list|tojson }},
+	  "pillars": {{ pillars|map(attribute='name')|list|tojson }},
+	  "pillarPercents": {{ pillars|map(attribute='percent')|list|tojson }},
+	  "roadmapNames": {{ all_roadmaps|map(attribute='name')|list|tojson }},
+	  "roadmapPercents": {{ all_roadmaps|map(attribute='percent')|list|tojson }},
+	  "projectStatus": {
+	    "backlog": {{ projects|selectattr('status','equalto','backlog')|list|length }},
+	    "in_progress": {{ projects|selectattr('status','equalto','in_progress')|list|length }},
+	    "review": {{ projects|selectattr('status','equalto','review')|list|length }},
+	    "done": {{ projects|selectattr('status','equalto','done')|list|length }}
+	  }
+	}
+</script>
+<script src="{{ url_for('static', filename='js/statistics.js') }}"></script>
+{% endblock %}

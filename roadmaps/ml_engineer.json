@@ -1,0 +1,202 @@
+{
+  "id": "ml_engineer",
+  "name": "ML Engineer",
+  "tagline": "Turn models into products that hold up in the real world.",
+  "icon": "cpu",
+  "accent": "#a855f7",
+  "difficulty": "Advanced",
+  "duration_weeks": 38,
+  "position": "center",
+  "description": "Mathematics, modeling, and the engineering discipline to run ML in production.",
+  "pillars": [
+    "Math & Theory",
+    "Modeling",
+    "Deep Learning",
+    "MLOps",
+    "Research"
+  ],
+  "milestones": [
+    {
+      "id": "mle-m1",
+      "title": "Math for ML",
+      "pillar": "Math & Theory",
+      "difficulty": "Advanced",
+      "hours": 40,
+      "learning_goal": "Build the linear algebra, calculus, and probability intuition ML rests on.",
+      "topics": [
+        "Vectors & matrices",
+        "Gradients",
+        "Probability",
+        "Optimization"
+      ],
+      "resources": [
+        {
+          "label": "Mathematics for ML",
+          "url": "https://mml-book.github.io/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Gradient Descent from Scratch",
+        "brief": "Implement optimization by hand and visualize it."
+      },
+      "deliverables": [
+        "From-scratch optimizer",
+        "Loss surface plots",
+        "Notes"
+      ],
+      "reflection_prompt": "What does the gradient actually point toward?"
+    },
+    {
+      "id": "mle-m2",
+      "title": "Classical ML",
+      "pillar": "Modeling",
+      "difficulty": "Intermediate",
+      "hours": 35,
+      "learning_goal": "Master the models that still win most real problems.",
+      "topics": [
+        "Linear/logistic",
+        "Trees & ensembles",
+        "Regularization",
+        "Evaluation"
+      ],
+      "resources": [
+        {
+          "label": "scikit-learn Docs",
+          "url": "https://scikit-learn.org/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Kaggle Baseline",
+        "brief": "Enter a competition and beat the median with classical models."
+      },
+      "deliverables": [
+        "Feature pipeline",
+        "Cross-validation",
+        "Leaderboard entry"
+      ],
+      "reflection_prompt": "Why did the simple model win?"
+    },
+    {
+      "id": "mle-m3",
+      "title": "Deep Learning",
+      "pillar": "Deep Learning",
+      "difficulty": "Advanced",
+      "hours": 50,
+      "learning_goal": "Train neural networks and understand why they work.",
+      "topics": [
+        "Backprop",
+        "CNNs",
+        "Transformers",
+        "Regularization",
+        "Transfer learning"
+      ],
+      "resources": [
+        {
+          "label": "Deep Learning (Goodfellow)",
+          "url": "https://www.deeplearningbook.org/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Fine-Tuned Model",
+        "brief": "Fine-tune a pretrained model on a custom dataset."
+      },
+      "deliverables": [
+        "Training pipeline",
+        "Eval report",
+        "Ablations"
+      ],
+      "reflection_prompt": "Which layer learned what?"
+    },
+    {
+      "id": "mle-m4",
+      "title": "Data-Centric ML",
+      "pillar": "Modeling",
+      "difficulty": "Advanced",
+      "hours": 30,
+      "learning_goal": "Improve models by improving data, not just architecture.",
+      "topics": [
+        "Labeling",
+        "Augmentation",
+        "Active learning",
+        "Slicing"
+      ],
+      "resources": [
+        {
+          "label": "Data-Centric AI",
+          "url": "https://datacentricai.org/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Data Quality Sprint",
+        "brief": "Improve a model only by fixing its data."
+      },
+      "deliverables": [
+        "Error analysis",
+        "Cleaned dataset",
+        "Before/after metrics"
+      ],
+      "reflection_prompt": "Which 5% of data caused most errors?"
+    },
+    {
+      "id": "mle-m5",
+      "title": "Serving & MLOps",
+      "pillar": "MLOps",
+      "difficulty": "Advanced",
+      "hours": 40,
+      "learning_goal": "Run models reliably at scale.",
+      "topics": [
+        "Serving",
+        "Feature stores",
+        "Monitoring",
+        "Retraining",
+        "A/B testing"
+      ],
+      "resources": [
+        {
+          "label": "Made With ML",
+          "url": "https://madewithml.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Production Model Service",
+        "brief": "Deploy, monitor, and A/B test a live model."
+      },
+      "deliverables": [
+        "Serving stack",
+        "Monitoring",
+        "A/B result"
+      ],
+      "reflection_prompt": "How do you retrain without regressing?"
+    },
+    {
+      "id": "mle-m6",
+      "title": "Reading Research",
+      "pillar": "Research",
+      "difficulty": "Advanced",
+      "hours": 25,
+      "learning_goal": "Read papers critically and reproduce results.",
+      "topics": [
+        "Paper anatomy",
+        "Reproduction",
+        "Benchmarks",
+        "Critique"
+      ],
+      "resources": [
+        {
+          "label": "Papers with Code",
+          "url": "https://paperswithcode.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Reproduce a Paper",
+        "brief": "Reproduce a paper's core result and report gaps."
+      },
+      "deliverables": [
+        "Reproduction repo",
+        "Results comparison",
+        "Critique"
+      ],
+      "reflection_prompt": "Where did reality diverge from the paper?"
+    }
+  ]
+}

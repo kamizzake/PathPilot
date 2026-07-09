@@ -1,0 +1,201 @@
+{
+  "id": "cyber_security",
+  "name": "Cyber Security",
+  "tagline": "Think like an attacker, build like a defender.",
+  "icon": "shield-check",
+  "accent": "#10b981",
+  "difficulty": "Advanced",
+  "duration_weeks": 34,
+  "position": "bottom",
+  "description": "Offensive and defensive security fundamentals, from networks to secure systems.",
+  "pillars": [
+    "Fundamentals",
+    "Offense",
+    "Defense",
+    "Cryptography",
+    "Governance"
+  ],
+  "milestones": [
+    {
+      "id": "cs-m1",
+      "title": "Networking & Systems",
+      "pillar": "Fundamentals",
+      "difficulty": "Intermediate",
+      "hours": 35,
+      "learning_goal": "Understand the terrain: networks, operating systems, and protocols.",
+      "topics": [
+        "TCP/IP",
+        "DNS",
+        "Linux internals",
+        "Processes & permissions"
+      ],
+      "resources": [
+        {
+          "label": "PortSwigger Academy",
+          "url": "https://portswigger.net/web-security"
+        }
+      ],
+      "weekend_project": {
+        "title": "Home Lab",
+        "brief": "Build a segmented virtual lab to attack and defend."
+      },
+      "deliverables": [
+        "Virtual network",
+        "Segmentation",
+        "Traffic capture"
+      ],
+      "reflection_prompt": "What did a packet capture reveal you didn't expect?"
+    },
+    {
+      "id": "cs-m2",
+      "title": "Web Security",
+      "pillar": "Offense",
+      "difficulty": "Advanced",
+      "hours": 40,
+      "learning_goal": "Find and fix the vulnerabilities that break real apps.",
+      "topics": [
+        "OWASP Top 10",
+        "Injection",
+        "XSS",
+        "Auth flaws",
+        "SSRF"
+      ],
+      "resources": [
+        {
+          "label": "OWASP",
+          "url": "https://owasp.org/www-project-top-ten/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Bug Bounty Sprint",
+        "brief": "Responsibly find and report real vulnerabilities."
+      },
+      "deliverables": [
+        "Findings report",
+        "Reproductions",
+        "Remediation advice"
+      ],
+      "reflection_prompt": "Which vuln class was easiest to miss?"
+    },
+    {
+      "id": "cs-m3",
+      "title": "Cryptography",
+      "pillar": "Cryptography",
+      "difficulty": "Advanced",
+      "hours": 30,
+      "learning_goal": "Use cryptography correctly \u2014 and recognize when it's misused.",
+      "topics": [
+        "Symmetric/asymmetric",
+        "Hashing",
+        "TLS",
+        "Key management"
+      ],
+      "resources": [
+        {
+          "label": "Crypto 101",
+          "url": "https://www.crypto101.io/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Encrypted Vault",
+        "brief": "Build a secrets vault with sound crypto choices."
+      },
+      "deliverables": [
+        "Threat model",
+        "Encryption at rest",
+        "Key rotation"
+      ],
+      "reflection_prompt": "Where would rolling your own crypto have failed?"
+    },
+    {
+      "id": "cs-m4",
+      "title": "Defensive Security",
+      "pillar": "Defense",
+      "difficulty": "Advanced",
+      "hours": 35,
+      "learning_goal": "Detect, respond to, and recover from attacks.",
+      "topics": [
+        "SIEM",
+        "Detection engineering",
+        "Incident response",
+        "Hardening"
+      ],
+      "resources": [
+        {
+          "label": "Blue Team Handbook",
+          "url": "https://www.blueteamhandbook.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Detection Lab",
+        "brief": "Simulate an attack and build detections for it."
+      },
+      "deliverables": [
+        "Detection rules",
+        "IR runbook",
+        "Timeline"
+      ],
+      "reflection_prompt": "How long until you'd have noticed the breach?"
+    },
+    {
+      "id": "cs-m5",
+      "title": "Secure Development",
+      "pillar": "Defense",
+      "difficulty": "Advanced",
+      "hours": 30,
+      "learning_goal": "Ship software that's hard to break.",
+      "topics": [
+        "Threat modeling",
+        "Secure SDLC",
+        "Dependency risk",
+        "Secrets"
+      ],
+      "resources": [
+        {
+          "label": "OWASP SAMM",
+          "url": "https://owaspsamm.org/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Secure a Codebase",
+        "brief": "Threat-model and harden an existing app."
+      },
+      "deliverables": [
+        "Threat model",
+        "Fixed vulns",
+        "CI security gates"
+      ],
+      "reflection_prompt": "Which dependency was your biggest risk?"
+    },
+    {
+      "id": "cs-m6",
+      "title": "Governance, Risk & Compliance",
+      "pillar": "Governance",
+      "difficulty": "Intermediate",
+      "hours": 20,
+      "learning_goal": "Connect security to business risk and real-world frameworks.",
+      "topics": [
+        "Risk assessment",
+        "NIST/ISO",
+        "Policy",
+        "Audits"
+      ],
+      "resources": [
+        {
+          "label": "NIST CSF",
+          "url": "https://www.nist.gov/cyberframework"
+        }
+      ],
+      "weekend_project": {
+        "title": "Risk Register",
+        "brief": "Build a risk register and remediation roadmap."
+      },
+      "deliverables": [
+        "Risk register",
+        "Control mapping",
+        "Roadmap"
+      ],
+      "reflection_prompt": "Which risk was cheapest to reduce most?"
+    }
+  ]
+}

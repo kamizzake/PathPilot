@@ -1,0 +1,109 @@
+<!doctype html>
+<html
+	lang="en"
+	data-theme="{{ profile.settings.theme if profile.settings else 'light' }}">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{{ app_name }} · {% block title %}{% endblock %}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+			rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='css/main.css') }}" />
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='css/pages.css') }}" />
+		<script src="https://unpkg.com/lucide@latest"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+	</head>
+	<body>
+		<!-- gradient defs for progress rings -->
+		<svg width="0" height="0" style="position: absolute">
+			<defs>
+				<linearGradient id="ringgrad" x1="0" y1="0" x2="1" y2="1">
+					<stop offset="0%" stop-color="var(--accent)" />
+					<stop offset="100%" stop-color="var(--accent-2)" />
+				</linearGradient>
+			</defs>
+		</svg>
+
+		<div class="app">
+			<!-- ============ SIDEBAR ============ -->
+			<aside class="sidebar" id="sidebar">
+				<div class="brand">
+					<div class="brand-mark"><i data-lucide="compass"></i></div>
+					<div>
+						<div class="brand-name">PathPilot</div>
+						<div class="brand-sub">Learning OS</div>
+					</div>
+				</div>
+
+				<nav class="nav">
+					<span class="nav-label">Navigate</span>
+					<a
+						href="{{ url_for('dashboard') }}"
+						class="nav-item {{ 'active' if page=='dashboard' }}"
+						><i data-lucide="layout-dashboard"></i> Dashboard</a
+					>
+					<a
+						href="{{ url_for('roadmaps') }}"
+						class="nav-item {{ 'active' if page=='roadmaps' }}"
+						><i data-lucide="route"></i> Roadmaps</a
+					>
+					<a
+						href="{{ url_for('milestones') }}"
+						class="nav-item {{ 'active' if page=='milestones' }}"
+						><i data-lucide="flag"></i> Milestones</a
+					>
+					<a
+						href="{{ url_for('projects') }}"
+						class="nav-item {{ 'active' if page=='projects' }}"
+						><i data-lucide="kanban"></i> Projects</a
+					>
+					<a
+						href="{{ url_for('notes') }}"
+						class="nav-item {{ 'active' if page=='notes' }}"
+						><i data-lucide="notebook-pen"></i> Notes</a
+					>
+
+					<span class="nav-label">Insight</span>
+					<a
+						href="{{ url_for('statistics') }}"
+						class="nav-item {{ 'active' if page=='statistics' }}"
+						><i data-lucide="bar-chart-3"></i> Statistics</a
+					>
+					<a
+						href="{{ url_for('profiles') }}"
+						class="nav-item {{ 'active' if page=='profiles' }}"
+						><i data-lucide="users"></i> Profiles</a
+					>
+				</nav>
+
+				<div class="sidebar-foot">
+					<button class="theme-toggle" id="themeToggle">
+						<i data-lucide="moon"></i> <span>Switch theme</span>
+					</button>
+					<a href="{{ url_for('profiles') }}" class="profile-chip">
+						<div class="avatar">{{ profile.avatar }}</div>
+						<div class="meta">
+							<b>{{ profile.name }}</b>
+							<span>{{ active_roadmap_meta.name if active_roadmap_meta }}</span>
+						</div>
+					</a>
+				</div>
+			</aside>
+
+			<!-- ============ MAIN ============ -->
+			<main class="main">{% block content %}{% endblock %}</main>
+		</div>
+
+		<div class="toast-wrap" id="toastWrap"></div>
+
+		<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+		{% block scripts %}{% endblock %}
+	</body>
+</html>

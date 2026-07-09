@@ -1,0 +1,201 @@
+{
+  "id": "web_developer",
+  "name": "Web Developer",
+  "tagline": "Craft fast, accessible, beautiful experiences on the open web.",
+  "icon": "layout-panel-top",
+  "accent": "#f97316",
+  "difficulty": "Beginner",
+  "duration_weeks": 28,
+  "position": "upper_right",
+  "description": "From semantic HTML to production front-ends: build the web people love to use.",
+  "pillars": [
+    "Markup & Style",
+    "Interactivity",
+    "Frameworks",
+    "Performance",
+    "Accessibility"
+  ],
+  "milestones": [
+    {
+      "id": "wd-m1",
+      "title": "Semantic HTML & Modern CSS",
+      "pillar": "Markup & Style",
+      "difficulty": "Beginner",
+      "hours": 25,
+      "learning_goal": "Build accessible, responsive layouts with modern CSS.",
+      "topics": [
+        "Semantic HTML",
+        "Flexbox & Grid",
+        "Custom properties",
+        "Responsive design"
+      ],
+      "resources": [
+        {
+          "label": "MDN Web Docs",
+          "url": "https://developer.mozilla.org/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Responsive Portfolio",
+        "brief": "Ship a fully responsive personal site, no frameworks."
+      },
+      "deliverables": [
+        "Responsive site",
+        "Lighthouse 95+",
+        "No layout shift"
+      ],
+      "reflection_prompt": "Which layout used Grid better than Flexbox?"
+    },
+    {
+      "id": "wd-m2",
+      "title": "JavaScript Deep Dive",
+      "pillar": "Interactivity",
+      "difficulty": "Intermediate",
+      "hours": 40,
+      "learning_goal": "Master the language: closures, async, and the DOM.",
+      "topics": [
+        "Closures",
+        "Promises & async",
+        "Event loop",
+        "Modules",
+        "Fetch"
+      ],
+      "resources": [
+        {
+          "label": "javascript.info",
+          "url": "https://javascript.info/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Vanilla SPA",
+        "brief": "Build a single-page app with no framework."
+      },
+      "deliverables": [
+        "Client router",
+        "State store",
+        "No dependencies"
+      ],
+      "reflection_prompt": "Where did the event loop surprise you?"
+    },
+    {
+      "id": "wd-m3",
+      "title": "Component Frameworks",
+      "pillar": "Frameworks",
+      "difficulty": "Intermediate",
+      "hours": 35,
+      "learning_goal": "Think in components and manage UI state.",
+      "topics": [
+        "Component model",
+        "State management",
+        "Routing",
+        "Data fetching"
+      ],
+      "resources": [
+        {
+          "label": "web.dev",
+          "url": "https://web.dev/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Dashboard App",
+        "brief": "Build a data dashboard in a component framework."
+      },
+      "deliverables": [
+        "Component library",
+        "Client routing",
+        "API integration"
+      ],
+      "reflection_prompt": "What state should have stayed local?"
+    },
+    {
+      "id": "wd-m4",
+      "title": "Web Performance",
+      "pillar": "Performance",
+      "difficulty": "Advanced",
+      "hours": 25,
+      "learning_goal": "Make the web feel instant.",
+      "topics": [
+        "Core Web Vitals",
+        "Lazy loading",
+        "Caching",
+        "Bundle budgets"
+      ],
+      "resources": [
+        {
+          "label": "web.dev/vitals",
+          "url": "https://web.dev/vitals/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Performance Rescue",
+        "brief": "Take a slow page and make it fast, measured."
+      },
+      "deliverables": [
+        "Before/after metrics",
+        "Bundle report",
+        "Caching plan"
+      ],
+      "reflection_prompt": "Which change moved the needle most?"
+    },
+    {
+      "id": "wd-m5",
+      "title": "Accessibility & Inclusive Design",
+      "pillar": "Accessibility",
+      "difficulty": "Intermediate",
+      "hours": 20,
+      "learning_goal": "Build for everyone, by default.",
+      "topics": [
+        "ARIA",
+        "Keyboard nav",
+        "Contrast",
+        "Screen readers"
+      ],
+      "resources": [
+        {
+          "label": "A11y Project",
+          "url": "https://www.a11yproject.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Accessibility Audit",
+        "brief": "Audit and fix a real site to WCAG AA."
+      },
+      "deliverables": [
+        "Audit report",
+        "Keyboard-complete UI",
+        "Contrast pass"
+      ],
+      "reflection_prompt": "What broke when you unplugged the mouse?"
+    },
+    {
+      "id": "wd-m6",
+      "title": "Full-Stack Integration",
+      "pillar": "Frameworks",
+      "difficulty": "Advanced",
+      "hours": 30,
+      "learning_goal": "Connect front-end to a real backend and deploy.",
+      "topics": [
+        "Auth flows",
+        "API design",
+        "Deployment",
+        "Env config"
+      ],
+      "resources": [
+        {
+          "label": "Full Stack Open",
+          "url": "https://fullstackopen.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Full-Stack Product",
+        "brief": "Ship a full product with auth and a database."
+      },
+      "deliverables": [
+        "Deployed app",
+        "Auth",
+        "Persistent data"
+      ],
+      "reflection_prompt": "Where did front and back-end assumptions diverge?"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Profiles{% endblock %}
+
+{% block content %}
+<div class="topbar rise">
+  <div>
+    <div class="eyebrow">Local-first, portable</div>
+    <h1>Profiles</h1>
+    <div class="sub">Each profile is a JSON file you own. Export it, import it, move it anywhere.</div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-ghost" id="importBtn"><i data-lucide="upload"></i> Import</button>
+    <input type="file" id="importFile" accept="application/json" class="hidden">
+    <button class="btn btn-primary" id="createBtn"><i data-lucide="user-plus"></i> New profile</button>
+  </div>
+</div>
+
+<div class="profiles-grid stagger">
+  {% for p in profiles %}
+  <div class="card profile-card {{ 'active' if p.slug==active }}">
+    <div class="head">
+      <div class="avatar">{{ p.avatar }}</div>
+      <div>
+        <h3>{{ p.name if p.name is string else p.name }}</h3>
+        <span>Since {{ p.created }}</span>
+      </div>
+    </div>
+    <div class="prow"><span>Active roadmap</span><b>{{ p.active_roadmap|titlecase }}</b></div>
+    <div class="prow"><span>Study streak</span><b>{{ p.study_streak }} days</b></div>
+    <div class="prow"><span>Completed</span><b>{{ p.completed_milestones|length }} milestones</b></div>
+    <div class="profile-actions">
+      {% if p.slug==active %}
+        <span class="btn btn-ghost" style="cursor:default"><i data-lucide="check"></i> Active</span>
+      {% else %}
+        <button class="btn btn-primary switch-btn" data-name="{{ p.slug }}"><i data-lucide="log-in"></i> Load</button>
+      {% endif %}
+      <a class="btn btn-ghost btn-icon" href="{{ url_for('export_profile', name=p.slug) }}" title="Export"><i data-lucide="download"></i></a>
+      <button class="btn btn-ghost btn-icon danger delete-btn" data-name="{{ p.slug }}" data-label="{{ p.name }}"
+              title="Delete profile" {{ 'disabled' if profiles|length <= 1 }}><i data-lucide="trash-2"></i></button>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div class="card add-profile" id="addCard">
+    <i data-lucide="plus"></i>
+    <div>Create a new profile</div>
+  </div>
+</div>
+
+<!-- delete confirm modal -->
+<div class="modal-scrim hidden" id="deleteModal">
+  <div class="modal">
+    <h2>Delete profile?</h2>
+    <p>This permanently removes <b id="delName">this profile</b> and all of its progress, projects, and notes. This can't be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="deleteCancel">Cancel</button>
+      <button class="btn btn-danger" id="deleteConfirm"><i data-lucide="trash-2"></i> Delete permanently</button>
+    </div>
+  </div>
+</div>
+
+<!-- create modal -->
+<div class="modal-scrim hidden" id="createModal">
+  <div class="modal">
+    <h2>New profile</h2>
+    <p>Profiles keep separate progress. Roadmaps are shared and fixed.</p>
+    <div class="field"><label>Name</label><input id="c_name" placeholder="e.g. Alex"></div>
+    <div class="field"><label>Starting roadmap</label>
+      <select id="c_roadmap">
+        <option value="ai_data_engineer">AI & Data Engineer</option>
+        <option value="software_engineer">Software Engineer</option>
+        <option value="web_developer">Web Developer</option>
+        <option value="ml_engineer">ML Engineer</option>
+        <option value="cyber_security">Cyber Security</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="createCancel">Cancel</button>
+      <button class="btn btn-primary" id="createSave"><i data-lucide="check"></i> Create profile</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const modal = document.getElementById('createModal');
+const openModal = () => modal.classList.remove('hidden');
+document.getElementById('createBtn').onclick = openModal;
+document.getElementById('addCard').onclick = openModal;
+document.getElementById('createCancel').onclick = () => modal.classList.add('hidden');
+modal.addEventListener('click', e => { if (e.target === modal) modal.classList.add('hidden'); });
+
+document.getElementById('createSave').onclick = async () => {
+  const name = document.getElementById('c_name').value.trim();
+  if (!name) { toast('Enter a name', false); return; }
+  const res = await api('/profiles/create', 'POST', { name, active_roadmap: document.getElementById('c_roadmap').value });
+  if (res.ok) { toast('Profile created'); await api('/profiles/switch/' + res.name, 'POST'); setTimeout(() => location.href = '/', 700); }
+  else toast(res.error || 'Could not create', false);
+};
+
+document.querySelectorAll('.switch-btn').forEach(b => b.onclick = async () => {
+  await api('/profiles/switch/' + b.dataset.name, 'POST');
+  toast('Loaded ' + b.dataset.name);
+  setTimeout(() => location.href = '/', 600);
+});
+
+// delete
+const delModal = document.getElementById('deleteModal');
+let pendingDelete = null;
+document.querySelectorAll('.delete-btn').forEach(b => b.onclick = (e) => {
+  e.stopPropagation();
+  pendingDelete = b.dataset.name;
+  document.getElementById('delName').textContent = b.dataset.label;
+  delModal.classList.remove('hidden');
+});
+document.getElementById('deleteCancel').onclick = () => delModal.classList.add('hidden');
+delModal.addEventListener('click', e => { if (e.target === delModal) delModal.classList.add('hidden'); });
+document.getElementById('deleteConfirm').onclick = async () => {
+  if (!pendingDelete) return;
+  const res = await api('/profiles/delete/' + pendingDelete, 'POST');
+  if (res.ok) { toast('Profile deleted'); setTimeout(() => location.reload(), 600); }
+  else { toast(res.error || 'Could not delete', false); delModal.classList.add('hidden'); }
+};
+
+// import
+document.getElementById('importBtn').onclick = () => document.getElementById('importFile').click();
+document.getElementById('importFile').onchange = (e) => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      const bundle = JSON.parse(reader.result);
+      const res = await api('/profiles/import', 'POST', bundle);
+      if (res.ok) { toast('Profile imported'); setTimeout(() => location.href = '/', 800); }
+      else toast(res.error || 'Import failed', false);
+    } catch (err) { toast('Invalid file', false); }
+  };
+  reader.readAsText(file);
+};
+</script>
+{% endblock %}

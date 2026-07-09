@@ -1,0 +1,165 @@
+{% extends "base.html" %} {% block title %}Projects{% endblock %} {% block
+content %}
+<div class="topbar rise">
+	<div>
+		<div class="eyebrow">Build in public</div>
+		<h1>Projects</h1>
+		<div class="sub">
+			Drag cards between columns as your work moves forward.
+		</div>
+	</div>
+	<div class="topbar-actions">
+		<button class="btn btn-primary" id="newProjectBtn">
+			<i data-lucide="plus"></i> New project
+		</button>
+	</div>
+</div>
+
+<div class="kanban stagger">
+	{% set cols = [('backlog','Backlog','var(--ink-4)'), ('in_progress','In
+	progress','var(--warning)'), ('review','Review','var(--accent)'),
+	('done','Done','var(--success)')] %} {% for key, label, color in cols %}
+	<div class="kcol" data-status="{{ key }}">
+		<div class="kcol-h">
+			<span class="t"
+				><span class="dot" style="background:{{ color }}"></span> {{ label
+				}}</span
+			>
+			<span class="count">{{ columns.get(key, [])|length }}</span>
+		</div>
+		<div class="kcards scroll-y">
+			{% for p in columns.get(key, []) %}
+			<div class="card pcard" draggable="true" data-id="{{ p.id }}">
+				<h4>{{ p.title }}</h4>
+				{% if p.description %}
+				<p class="pdesc">{{ p.description }}</p>
+				{% endif %} {% if p.repository %}<span class="prepo"
+					><i data-lucide="github"></i> {{ p.repository }}</span
+				>{% endif %}
+				<div class="ms-foot">
+					<div class="bar {{ 'success' if p.status=='done' }}">
+						<span data-w="{{ p.percent }}"></span>
+					</div>
+					<span
+						class="pct"
+						style="
+							font-size: 12px;
+							font-weight: 700;
+							font-family: var(--font-display);
+						"
+						>{{ p.percent }}%</span
+					>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+<!-- new project modal -->
+<div class="modal-scrim hidden" id="projModal">
+	<div class="modal">
+		<h2>New project</h2>
+		<p>Give it a name and a one-line brief. You can flesh it out later.</p>
+		<div class="field">
+			<label>Title</label
+			><input id="p_title" placeholder="e.g. Grounded Q&A Agent" />
+		</div>
+		<div class="field">
+			<label>Description</label
+			><textarea
+				id="p_desc"
+				rows="2"
+				placeholder="What are you building?"></textarea>
+		</div>
+		<div class="field">
+			<label>Repository (optional)</label
+			><input id="p_repo" placeholder="github.com/you/project" />
+		</div>
+		<div class="field">
+			<label>Status</label>
+			<select id="p_status">
+				<option value="backlog">Backlog</option>
+				<option value="in_progress">In progress</option>
+				<option value="review">Review</option>
+				<option value="done">Done</option>
+			</select>
+		</div>
+		<div class="modal-actions">
+			<button class="btn btn-ghost" id="projCancel">Cancel</button>
+			<button class="btn btn-primary" id="projSave">
+				<i data-lucide="check"></i> Create project
+			</button>
+		</div>
+	</div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+	const modal = document.getElementById("projModal");
+	document.getElementById("newProjectBtn").onclick = () =>
+		modal.classList.remove("hidden");
+	document.getElementById("projCancel").onclick = () =>
+		modal.classList.add("hidden");
+	modal.addEventListener("click", (e) => {
+		if (e.target === modal) modal.classList.add("hidden");
+	});
+
+	document.getElementById("projSave").onclick = async () => {
+		const title = document.getElementById("p_title").value.trim();
+		if (!title) {
+			toast("Give the project a title", false);
+			return;
+		}
+		const status = document.getElementById("p_status").value;
+		await api("/api/projects", "POST", {
+			title,
+			description: document.getElementById("p_desc").value,
+			repository: document.getElementById("p_repo").value,
+			status,
+			percent: status === "done" ? 100 : 0,
+		});
+		toast("Project created");
+		setTimeout(() => location.reload(), 600);
+	};
+
+	// drag & drop
+	let dragged = null;
+	document.querySelectorAll(".pcard").forEach((card) => {
+		card.addEventListener("dragstart", () => {
+			dragged = card;
+			card.classList.add("dragging");
+		});
+		card.addEventListener("dragend", () => {
+			card.classList.remove("dragging");
+			dragged = null;
+		});
+	});
+	document.querySelectorAll(".kcol .kcards").forEach((zone) => {
+		zone.addEventListener("dragover", (e) => e.preventDefault());
+		zone.addEventListener("drop", async (e) => {
+			e.preventDefault();
+			if (!dragged) return;
+			const col = zone.closest(".kcol");
+			const status = col.dataset.status;
+			zone.appendChild(dragged);
+			const id = dragged.dataset.id;
+			const pct =
+				status === "done"
+					? 100
+					: status === "review"
+						? 90
+						: status === "in_progress"
+							? 50
+							: 0;
+			await api("/api/projects/" + id, "PATCH", { status, percent: pct });
+			// update column counts
+			document.querySelectorAll(".kcol").forEach((c) => {
+				c.querySelector(".count").textContent =
+					c.querySelectorAll(".pcard").length;
+			});
+			toast("Moved to " + status.replace("_", " "));
+		});
+	});
+</script>
+{% endblock %}

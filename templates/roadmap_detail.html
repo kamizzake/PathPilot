@@ -1,0 +1,111 @@
+{% extends "base.html" %} {% from "_macros.html" import ring %} {% block title
+%}{{ roadmap.name }}{% endblock %} {% block content %}
+<div class="topbar rise">
+	<div>
+		<div class="eyebrow">
+			<a href="{{ url_for('roadmaps') }}" style="color: var(--accent)"
+				>← Roadmaps</a
+			>
+		</div>
+		<h1>{{ roadmap.name }}</h1>
+		<div class="sub">{{ roadmap.description }}</div>
+	</div>
+	<div class="topbar-actions">
+		<button
+			class="btn btn-primary"
+			id="activateBtn"
+			data-rid="{{ roadmap.id }}">
+			<i data-lucide="check-circle"></i> Set as active
+		</button>
+	</div>
+</div>
+
+<div class="rd-grid" style="--rm-accent:{{ roadmap.accent }}">
+	<div class="rd-side">
+		<div class="card rd-hero">
+			<div class="rm-ico"><i data-lucide="{{ roadmap.icon }}"></i></div>
+			<h2>{{ roadmap.percent }}% complete</h2>
+			<p>{{ roadmap.tagline }}</p>
+			<div class="focus-meta" style="margin-top: 14px">
+				<span class="chip"
+					><i data-lucide="flag"></i> {{ roadmap.milestones|length }}
+					milestones</span
+				>
+				<span class="chip"
+					><i data-lucide="clock"></i> {{ roadmap.duration_weeks }} weeks</span
+				>
+			</div>
+		</div>
+		<div
+			class="card"
+			style="
+				flex: 1;
+				min-height: 0;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			">
+			<div class="card-h">
+				<h3><i data-lucide="columns-3"></i> Pillars</h3>
+			</div>
+			<div class="pillars-list scroll-y">
+				{% for p in pillars %}
+				<div class="pillar-row">
+					{{ ring(p.percent, 40, 5) }}<span class="name">{{ p.name }}</span>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div
+		class="card"
+		style="display: flex; flex-direction: column; min-height: 0">
+		<div class="card-h">
+			<h3><i data-lucide="git-branch"></i> Milestone path</h3>
+			<span class="see-all"
+				>{{ roadmap.completed_count }}/{{ roadmap.milestones|length }}
+				done</span
+			>
+		</div>
+		<div class="rd-timeline scroll-y">
+			{% for m in roadmap.milestones %}
+			<a
+				href="{{ url_for('milestone_detail', mid=m.id) }}"
+				class="tl-item {{ 'done' if m.status=='completed' }}">
+				<div class="tl-num">{{ '%02d' % loop.index }}</div>
+				<div class="tl-body">
+					<h4>{{ m.title }}</h4>
+					<div class="m">
+						{{ m.pillar }} · {{ m.hours }}h · {{ m.difficulty }}
+					</div>
+				</div>
+				<div class="mini-bar bar"><span data-w="{{ m.percent }}"></span></div>
+				<span
+					class="pct"
+					style="
+						font-size: 12px;
+						font-weight: 700;
+						font-family: var(--font-display);
+						color: var(--rm-accent);
+					"
+					>{{ m.percent }}%</span
+				>
+			</a>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+	animateRings();
+	document
+		.getElementById("activateBtn")
+		.addEventListener("click", async (e) => {
+			const rid = e.currentTarget.dataset.rid;
+			await api("/roadmap/" + rid + "/activate", "POST");
+			toast("Roadmap activated");
+			setTimeout(() => (location.href = "/"), 700);
+		});
+</script>
+{% endblock %}

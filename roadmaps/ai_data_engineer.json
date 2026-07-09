@@ -1,0 +1,278 @@
+{
+  "id": "ai_data_engineer",
+  "name": "AI & Data Solutions Engineer",
+  "tagline": "Build software, work with data, ship dashboards, and integrate AI into real products.",
+  "icon": "brain-circuit",
+  "accent": "#6366f1",
+  "difficulty": "Intermediate",
+  "duration_weeks": 28,
+  "position": "top",
+  "description": "A well-rounded path from Python foundations to applied AI, built around real business problems and a portfolio-quality flagship project. Long-term aim: technical leadership, solutions architecture, and FinTech.",
+  "pillars": [
+    "Software Engineering & Development",
+    "Data & Analytics",
+    "Visualization & Business Intelligence",
+    "Applied AI",
+    "Business, Finance & Product Thinking",
+    "Communication & Professional Growth",
+    "Productivity & Modern Development"
+  ],
+  "milestones": [
+    {
+      "id": "aide-m1",
+      "title": "Python Foundations & Professional Setup",
+      "pillar": "Productivity & Modern Development",
+      "difficulty": "Beginner",
+      "hours": 30,
+      "learning_goal": "Build a strong Python foundation and a professional development workflow.",
+      "topics": [
+        "Python fundamentals",
+        "Functions",
+        "OOP basics",
+        "File handling",
+        "Git & GitHub",
+        "Virtual environments",
+        "Clean code",
+        "VS Code productivity"
+      ],
+      "resources": [
+        {
+          "label": "Official Python Tutorial",
+          "url": "https://docs.python.org/3/tutorial/"
+        },
+        {
+          "label": "Real Python — Git & GitHub",
+          "url": "https://realpython.com/python-git-github-intro/"
+        },
+        {
+          "label": "VS Code for Python",
+          "url": "https://code.visualstudio.com/docs/python/python-tutorial"
+        }
+      ],
+      "weekend_project": {
+        "title": "PC File Organizer",
+        "brief": "Write a Python tool that sorts a messy folder into clean subfolders by file type, with a tidy repo behind it."
+      },
+      "deliverables": [
+        "GitHub repository",
+        "README",
+        "Clean commit history"
+      ],
+      "reflection_prompt": "Which part of your setup (venv, Git, VS Code) will save you the most time going forward?"
+    },
+    {
+      "id": "aide-m2",
+      "title": "SQL & Databases",
+      "pillar": "Software Engineering & Development",
+      "difficulty": "Beginner",
+      "hours": 25,
+      "learning_goal": "Store and manage real application data with SQL and a relational database.",
+      "topics": [
+        "SQL",
+        "SQLite / PostgreSQL",
+        "CRUD",
+        "Joins",
+        "GROUP BY",
+        "Database design",
+        "Python + SQL"
+      ],
+      "resources": [
+        {
+          "label": "SQLBolt — Interactive SQL",
+          "url": "https://sqlbolt.com/"
+        },
+        {
+          "label": "Mode SQL Tutorial",
+          "url": "https://mode.com/sql-tutorial/"
+        },
+        {
+          "label": "Python sqlite3 docs",
+          "url": "https://docs.python.org/3/library/sqlite3.html"
+        }
+      ],
+      "weekend_project": {
+        "title": "Expense Tracker Database",
+        "brief": "Design a schema for expenses and categories, then read and write to it from Python."
+      },
+      "deliverables": [
+        "SQL database",
+        "Schema",
+        "GitHub update"
+      ],
+      "reflection_prompt": "How did you decide what belongs in its own table versus a single column?"
+    },
+    {
+      "id": "aide-m3",
+      "title": "Data & Analytics",
+      "pillar": "Data & Analytics",
+      "difficulty": "Intermediate",
+      "hours": 35,
+      "learning_goal": "Transform raw data into useful insights with pandas and clear exploratory analysis.",
+      "topics": [
+        "Pandas",
+        "NumPy",
+        "Data cleaning",
+        "Exploratory data analysis",
+        "Public datasets",
+        "Basic statistics"
+      ],
+      "resources": [
+        {
+          "label": "Kaggle — Pandas course",
+          "url": "https://www.kaggle.com/learn/pandas"
+        },
+        {
+          "label": "pandas Getting Started",
+          "url": "https://pandas.pydata.org/docs/getting_started/index.html"
+        }
+      ],
+      "weekend_project": {
+        "title": "Expense Analytics",
+        "brief": "Analyse your expense data (or a public dataset), surface trends, and chart the findings in a notebook."
+      },
+      "deliverables": [
+        "Analysis notebook",
+        "Charts",
+        "GitHub update"
+      ],
+      "reflection_prompt": "What was the most surprising thing the data told you that you couldn't see before?"
+    },
+    {
+      "id": "aide-m4",
+      "title": "Visualization & BI",
+      "pillar": "Visualization & Business Intelligence",
+      "difficulty": "Intermediate",
+      "hours": 25,
+      "learning_goal": "Present information professionally and turn analysis into a business-ready dashboard.",
+      "topics": [
+        "Power BI",
+        "Dashboard design",
+        "KPI design",
+        "Data storytelling"
+      ],
+      "resources": [
+        {
+          "label": "Microsoft Learn — Power BI",
+          "url": "https://learn.microsoft.com/en-us/training/powerplatform/power-bi"
+        },
+        {
+          "label": "Storytelling with Data",
+          "url": "https://www.storytellingwithdata.com/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Business Intelligence Dashboard",
+        "brief": "Build a single-screen dashboard with clear KPIs that answers one real business question."
+      },
+      "deliverables": [
+        "Dashboard",
+        "Screenshots",
+        "README update"
+      ],
+      "reflection_prompt": "Could a busy manager understand your main insight in under ten seconds?"
+    },
+    {
+      "id": "aide-m5",
+      "title": "Software Engineering & APIs",
+      "pillar": "Software Engineering & Development",
+      "difficulty": "Intermediate",
+      "hours": 30,
+      "learning_goal": "Convert scripts into real applications with a documented REST API.",
+      "topics": [
+        "FastAPI",
+        "REST APIs",
+        "JSON",
+        "Error handling",
+        "Testing basics"
+      ],
+      "resources": [
+        {
+          "label": "FastAPI Official Tutorial",
+          "url": "https://fastapi.tiangolo.com/tutorial/"
+        },
+        {
+          "label": "Real Python — Testing",
+          "url": "https://realpython.com/pytest-python-testing/"
+        }
+      ],
+      "weekend_project": {
+        "title": "Expense Tracker API",
+        "brief": "Expose your expense tracker through a FastAPI service with CRUD endpoints and basic tests."
+      },
+      "deliverables": [
+        "API",
+        "Documentation",
+        "GitHub update"
+      ],
+      "reflection_prompt": "Where does your API handle bad input, and where could it still break?"
+    },
+    {
+      "id": "aide-m6",
+      "title": "Applied AI",
+      "pillar": "Applied AI",
+      "difficulty": "Advanced",
+      "hours": 35,
+      "learning_goal": "Build software that is genuinely enhanced by AI, not just decorated with it.",
+      "topics": [
+        "LLM APIs",
+        "Prompt engineering",
+        "AI integration",
+        "Intro to RAG"
+      ],
+      "resources": [
+        {
+          "label": "Anthropic Docs",
+          "url": "https://docs.claude.com/"
+        },
+        {
+          "label": "Prompt Engineering Guide",
+          "url": "https://www.promptingguide.ai/"
+        }
+      ],
+      "weekend_project": {
+        "title": "AI Financial Assistant",
+        "brief": "Add an LLM-powered feature to your expense tracker that answers questions about a user's spending."
+      },
+      "deliverables": [
+        "AI feature",
+        "Documentation",
+        "Demo (optional)"
+      ],
+      "reflection_prompt": "How do you keep the assistant's answers grounded in the user's actual data?"
+    },
+    {
+      "id": "aide-m7",
+      "title": "Portfolio & Professional Polish",
+      "pillar": "Communication & Professional Growth",
+      "difficulty": "Intermediate",
+      "hours": 20,
+      "learning_goal": "Assemble a portfolio ready for internship and Werkstudent applications in Germany.",
+      "topics": [
+        "Documentation",
+        "GitHub portfolio",
+        "Product thinking",
+        "Technical presentation"
+      ],
+      "resources": [
+        {
+          "label": "makeareadme.com",
+          "url": "https://www.makeareadme.com/"
+        },
+        {
+          "label": "GitHub — About READMEs",
+          "url": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes"
+        }
+      ],
+      "weekend_project": {
+        "title": "Portfolio Version 1.0",
+        "brief": "Polish your strongest project into a flagship: clean repo, professional README, screenshots, and a short write-up."
+      },
+      "deliverables": [
+        "Polished repository",
+        "Professional README",
+        "Portfolio showcase"
+      ],
+      "reflection_prompt": "If a recruiter only opened one of your repos, which would it be — and is it ready?"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Roadmaps{% endblock %}
+
+{# hexagon vertices (flat-top): the wedges tile this exactly #}
+{% set HEX = '175,63.49 425,63.49 550,280 425,496.51 175,496.51 50,280' %}
+{% set geo = {
+  'top':         {'path':'300,280 175,63.49 425,63.49',  'cx':300,'cy':126},
+  'upper_right': {'path':'300,280 425,63.49 550,280',    'cx':428,'cy':206},
+  'lower_right': {'path':'300,280 550,280 425,496.51',   'cx':428,'cy':358},
+  'lower_left':  {'path':'300,280 175,496.51 50,280',    'cx':172,'cy':358},
+  'upper_left':  {'path':'300,280 50,280 175,63.49',     'cx':172,'cy':206}
+} %}
+
+{% block content %}
+<div class="hex-page rise">
+  <div class="rm-ambient" aria-hidden="true">
+    <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+  </div>
+
+  <div class="topbar hex-topbar">
+    <div>
+      <div class="eyebrow">Choose your path</div>
+      <h1>Five roadmaps. One&nbsp;at&nbsp;a&nbsp;time.</h1>
+      <div class="sub">Hover a facet to preview it — tap to open. Your active path drives everything else.</div>
+    </div>
+    <div class="topbar-actions">
+      <a class="btn btn-ghost" href="{{ url_for('statistics') }}"><i data-lucide="bar-chart-3"></i> Overall {{ overall }}%</a>
+    </div>
+  </div>
+
+  <div class="hex-layout">
+    <div class="hex-wrap" id="hexWrap">
+      <svg class="hex-svg" viewBox="0 0 600 560" xmlns="http://www.w3.org/2000/svg" aria-label="Roadmap hexagon">
+        <defs>
+          {% for slot, rm in slots.items() %}
+          <linearGradient id="g-{{ slot }}" x1="0.15" y1="0" x2="0.5" y2="1">
+            <stop offset="0"  stop-color="{{ rm.accent }}" stop-opacity="0.48"/>
+            <stop offset="1"  stop-color="{{ rm.accent }}" stop-opacity="0.24"/>
+          </linearGradient>
+          {% endfor %}
+          <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="{{ active_rm.accent }}"/>
+            <stop offset="1" stop-color="{{ active_rm.accent }}" stop-opacity="0.55"/>
+          </linearGradient>
+          <filter id="hexShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="22" stdDeviation="30" flood-color="#312e81" flood-opacity="0.20"/>
+          </filter>
+        </defs>
+
+        <polygon class="hex-plate" points="{{ HEX }}" filter="url(#hexShadow)"/>
+
+        {% for slot, g in geo.items() %}
+          {% set rm = slots.get(slot) %}
+          {% if rm %}
+          <g class="wedge {{ 'is-active' if rm.id==active }}" style="--seg:{{ rm.accent }}"
+             data-id="{{ rm.id }}" data-name="{{ rm.name }}" data-tagline="{{ rm.tagline }}"
+             data-diff="{{ rm.difficulty }}" data-weeks="{{ rm.duration_weeks }}"
+             data-ms="{{ rm.milestones|length }}" data-percent="{{ rm.percent }}"
+             data-accent="{{ rm.accent }}" data-icon="{{ rm.icon }}"
+             data-active="{{ '1' if rm.id==active else '' }}"
+             data-href="{{ url_for('roadmap_detail', rid=rm.id) }}"
+             tabindex="0" role="link" aria-label="{{ rm.name }}">
+            <polygon class="w-base" points="{{ g.path }}" fill="url(#g-{{ slot }})"/>
+            <polygon class="w-fill" points="{{ g.path }}" fill="{{ rm.accent }}"/>
+            <text class="wedge-name" x="{{ g.cx }}" y="{{ g.cy }}" text-anchor="middle">
+              {% for line in rm.lines %}
+                <tspan x="{{ g.cx }}" dy="{{ '0' if loop.first else '1.08em' }}">{{ line }}</tspan>
+              {% endfor %}
+            </text>
+            {% if rm.id==active %}
+            <text class="wedge-tag" x="{{ g.cx }}" y="{{ g.cy + (30 if rm.lines|length>1 else 17) }}" text-anchor="middle">● ACTIVE</text>
+            {% endif %}
+          </g>
+          {% endif %}
+        {% endfor %}
+
+        <!-- bottom summary facet -> statistics -->
+        <g class="wedge summary" onclick="location.href='{{ url_for('statistics') }}'" tabindex="0" role="link" aria-label="Statistics">
+          <polygon class="w-base" points="300,280 425,496.51 175,496.51"/>
+          <text class="sum-ico" x="300" y="398" text-anchor="middle">↗</text>
+          <text class="sum-lbl" x="300" y="424" text-anchor="middle">statistics</text>
+        </g>
+
+        <polygon class="hex-outline" points="{{ HEX }}"/>
+
+        <!-- centre hub with animated overall-progress ring -->
+        <circle class="hub-track" cx="300" cy="280" r="88"/>
+        <circle class="hub-prog" cx="300" cy="280" r="88"
+                style="--c:552.92; --dash:{{ (552.92 * (1 - overall/100))|round(2) }}"/>
+        <circle class="hub-disc" cx="300" cy="280" r="74"/>
+      </svg>
+
+      <div class="hub-emblem">
+        <i data-lucide="flame" class="{{ 'lit' if streak.streak }}"></i>
+        <b>{{ streak.streak }}</b>
+        <span>day streak</span>
+        <em>{{ overall }}% overall</em>
+      </div>
+    </div>
+
+    <aside class="rm-panel" id="rmPanel" style="--seg:{{ active_rm.accent }}">
+      <div class="rmp-top">
+        <span class="rmp-ico"><i data-lucide="{{ active_rm.icon }}" id="rmpIco"></i></span>
+        <span class="rmp-badge" id="rmpBadge"><i data-lucide="check"></i> Active path</span>
+      </div>
+      <h2 id="rmpName">{{ active_rm.name }}</h2>
+      <p id="rmpTag">{{ active_rm.tagline }}</p>
+      <div class="rmp-meta">
+        <span class="chip diff-{{ active_rm.difficulty }}" id="rmpDiff">{{ active_rm.difficulty }}</span>
+        <span class="chip"><i data-lucide="clock"></i> <span id="rmpWeeks">{{ active_rm.duration_weeks }}</span> weeks</span>
+        <span class="chip"><i data-lucide="flag"></i> <span id="rmpMs">{{ active_rm.milestones|length }}</span> milestones</span>
+      </div>
+      <div class="rmp-prog">
+        <div class="rmp-prog-h"><span>Progress</span><span id="rmpPct">{{ active_rm.percent }}%</span></div>
+        <div class="rmp-bar"><span id="rmpBar" style="width:{{ active_rm.percent }}%"></span></div>
+      </div>
+      <div class="rmp-actions">
+        <a class="btn btn-lg btn-primary" id="rmpOpen" href="{{ url_for('roadmap_detail', rid=active_rm.id) }}"><i data-lucide="arrow-right"></i> Open path</a>
+        <button class="btn btn-lg btn-soft" id="rmpActivate" data-rid="{{ active_rm.id }}" {{ 'hidden' if active_rm.id==active }}><i data-lucide="check-circle"></i> Set as active</button>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.__activeDefault = {
+  id: "{{ active_rm.id }}", name: {{ active_rm.name|tojson }}, tagline: {{ active_rm.tagline|tojson }},
+  diff: "{{ active_rm.difficulty }}", weeks: "{{ active_rm.duration_weeks }}",
+  ms: "{{ active_rm.milestones|length }}", percent: "{{ active_rm.percent }}",
+  accent: "{{ active_rm.accent }}", icon: "{{ active_rm.icon }}",
+  href: "{{ url_for('roadmap_detail', rid=active_rm.id) }}",
+  active: {{ '1' if active_rm.id==active else '0' }}
+};
+</script>
+<script src="{{ url_for('static', filename='js/roadmaps.js') }}"></script>
+{% endblock %}

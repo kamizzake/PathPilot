@@ -1,0 +1,228 @@
+{% extends "base.html" %} {% block title %}{{ m.title }}{% endblock %} {% block
+content %}
+<div class="topbar rise">
+	<div>
+		<div class="eyebrow">
+			<a href="{{ url_for('milestones') }}" style="color: var(--accent)"
+				>← Milestones</a
+			>
+			· {{ m.pillar }}
+		</div>
+		<h1>{{ m.title }}</h1>
+		<div class="sub">{{ m.learning_goal }}</div>
+	</div>
+	<div class="topbar-actions">
+		<span class="pill diff-{{ m.difficulty }}">{{ m.difficulty }}</span>
+		<span class="pill muted"><i data-lucide="clock"></i> {{ m.hours }}h</span>
+		<span
+			class="pill {{ 'success' if m.status=='completed' else 'warning' if m.status=='in_progress' else 'muted' }}"
+			id="statusPill"
+			>{{ m.percent }}% done</span
+		>
+	</div>
+</div>
+
+<div class="detail-grid" data-mid="{{ m.id }}">
+	<!-- COLUMN 1: learning content -->
+	<div class="detail-col">
+		<div class="card weekend-banner">
+			<h4><i data-lucide="rocket"></i> Weekend project</h4>
+			<b>{{ m.weekend_project.title }}</b>
+			<p
+				style="
+					font-size: 13px;
+					color: var(--ink-3);
+					margin: 6px 0 0;
+					line-height: 1.5;
+				">
+				{{ m.weekend_project.brief }}
+			</p>
+		</div>
+		<div class="card col1-card">
+			<div class="card-h">
+				<h3><i data-lucide="book-open"></i> Topics to study</h3>
+				<span class="see-all" id="topicCount">0/{{ m.topics|length }}</span>
+			</div>
+			<div class="topic-list scroll-y" id="topicList">
+				{% for t in m.topics %}
+				<div
+					class="check {{ 'done' if m.topics_done.get(t) }}"
+					data-key="{{ t }}">
+					<div class="box"><i data-lucide="check"></i></div>
+					<span class="txt">{{ t|topiccase }}</span>
+				</div>
+				{% endfor %}
+			</div>
+			<div class="card-h" style="margin-top: 16px">
+				<h3><i data-lucide="link"></i> Resources</h3>
+			</div>
+			<div class="res-list">
+				{% for r in m.resources %}
+				<a href="{{ r.url }}" target="_blank" rel="noopener"
+					><i data-lucide="external-link"></i> {{ r.label }}</a
+				>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<!-- COLUMN 2: deliverables checklist -->
+	<div class="detail-col">
+		<div
+			class="card"
+			style="flex: 1; min-height: 0; display: flex; flex-direction: column">
+			<div class="card-h">
+				<h3><i data-lucide="list-checks"></i> Deliverables</h3>
+			</div>
+			<div class="check-list scroll-y" id="checklist">
+				{% for d in m.deliverables %}
+				<div
+					class="check {{ 'done' if m.checklist.get(d) }}"
+					data-key="{{ d }}">
+					<div class="box"><i data-lucide="check"></i></div>
+					<span class="txt">{{ d }}</span>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-h">
+				<h3><i data-lucide="sparkle"></i> Outcome</h3>
+			</div>
+			<input
+				class="mini-input"
+				id="outcome"
+				placeholder="What did you produce or achieve?"
+				value="{{ m.outcome }}" />
+		</div>
+	</div>
+
+	<!-- COLUMN 3: notes + reflection + github -->
+	<div class="detail-col">
+		<div class="card detail-editor" style="flex: 1; min-height: 0">
+			<div class="card-h">
+				<h3><i data-lucide="notebook-pen"></i> Notes</h3>
+				<span class="see-all" id="saveState">Saved</span>
+			</div>
+			<textarea id="notes" placeholder="Jot down anything you learn here…">
+{{ m.notes }}</textarea
+			>
+		</div>
+		<div class="card">
+			<div class="card-h">
+				<h3><i data-lucide="messages-square"></i> Reflection</h3>
+			</div>
+			<p
+				style="
+					font-size: 12.5px;
+					color: var(--ink-4);
+					margin: 0 0 8px;
+					font-style: italic;
+				">
+				{{ m.reflection_prompt }}
+			</p>
+			<textarea
+				class="mini-input"
+				id="reflection"
+				rows="2"
+				style="resize: none">
+{{ m.reflection }}</textarea
+			>
+		</div>
+		<div class="card">
+			<div class="card-h">
+				<h3><i data-lucide="github"></i> Repository</h3>
+			</div>
+			<input
+				class="mini-input"
+				id="github"
+				placeholder="github.com/you/project"
+				value="{{ m.github_link }}" />
+		</div>
+	</div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+	const mid = document.querySelector(".detail-grid").dataset.mid;
+	let saveTimer;
+
+	function collectChecklist() {
+		const cl = {};
+		document.querySelectorAll("#checklist .check").forEach((c) => {
+			cl[c.dataset.key] = c.classList.contains("done");
+		});
+		return cl;
+	}
+	function markSaving() {
+		document.getElementById("saveState").textContent = "Saving…";
+	}
+	function markSaved() {
+		document.getElementById("saveState").textContent = "Saved";
+	}
+
+	async function push(extra = {}) {
+		markSaving();
+		const body = {
+			checklist: collectChecklist(),
+			notes: document.getElementById("notes").value,
+			reflection: document.getElementById("reflection").value,
+			github_link: document.getElementById("github").value,
+			outcome: document.getElementById("outcome").value,
+			...extra,
+		};
+		const res = await api("/api/milestone/" + mid, "POST", body);
+		const pct = res.progress ? res.progress.percent : 0;
+		const pill = document.getElementById("statusPill");
+		pill.textContent = pct + "% done";
+		pill.className =
+			"pill " + (pct >= 100 ? "success" : pct > 0 ? "warning" : "muted");
+		markSaved();
+	}
+
+	// deliverable checkbox toggle
+	document.querySelectorAll("#checklist .check").forEach((c) => {
+		c.addEventListener("click", () => {
+			c.classList.toggle("done");
+			push().then(() => {
+				if (collectChecklist()[c.dataset.key]) toast("Deliverable checked");
+			});
+		});
+	});
+
+	// topic checklist (tracking only — does not change milestone %)
+	function collectTopics() {
+		const t = {};
+		document.querySelectorAll("#topicList .check").forEach((c) => {
+			t[c.dataset.key] = c.classList.contains("done");
+		});
+		return t;
+	}
+	function updateTopicCount() {
+		const all = document.querySelectorAll("#topicList .check");
+		const done = [...all].filter((c) => c.classList.contains("done")).length;
+		document.getElementById("topicCount").textContent = done + "/" + all.length;
+	}
+	async function pushTopics() {
+		await api("/api/milestone/" + mid, "POST", {
+			topics_done: collectTopics(),
+		});
+	}
+	document.querySelectorAll("#topicList .check").forEach((c) => {
+		c.addEventListener("click", () => {
+			c.classList.toggle("done");
+			updateTopicCount();
+			pushTopics();
+		});
+	});
+	updateTopicCount();
+
+	// debounced autosave for text fields
+	["notes", "reflection", "github", "outcome"].forEach((id) => {
+		document.getElementById(id).addEventListener("input", () => {
+			markSaving();
+			clearTimeout(saveTimer);
+			saveTimer = setTimeout(push, 800);
+		});
+	});
+</script>
+{% endblock %}

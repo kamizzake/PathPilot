@@ -1,0 +1,114 @@
+{% extends "base.html" %} {% block title %}Notes{% endblock %} {% block content
+%}
+<div class="topbar rise">
+	<div>
+		<div class="eyebrow">Think on paper</div>
+		<h1>Notes</h1>
+		<div class="sub">A quiet place to write. Everything autosaves.</div>
+	</div>
+	<div class="topbar-actions">
+		<button class="btn btn-primary" id="newNote">
+			<i data-lucide="plus"></i> New note
+		</button>
+	</div>
+</div>
+
+<div class="notes-layout" id="notesApp" data-notes="{{ notes|tojson }}">
+	<div class="card notes-list">
+		<div class="card-h">
+			<h3><i data-lucide="files"></i> All notes</h3>
+		</div>
+		<div class="notes-scroll" id="noteList"></div>
+	</div>
+	<div class="card note-editor" id="editor">
+		<div class="empty" id="noteEmpty">
+			<i data-lucide="feather"></i>
+			<div>Select a note, or create a new one.</div>
+		</div>
+		<div
+			id="noteForm"
+			class="hidden"
+			style="display: flex; flex-direction: column; height: 100%">
+			<input class="title" id="noteTitle" placeholder="Untitled" />
+			<div class="saved">
+				<i data-lucide="check"></i> <span id="noteSaved">Saved</span>
+			</div>
+			<textarea id="noteBody" placeholder="Start writing…"></textarea>
+		</div>
+	</div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+	let notes = JSON.parse(
+		document.getElementById("notesApp").dataset.notes || "[]",
+	);
+	let activeId = null,
+		saveTimer = null;
+
+	function renderList() {
+		const list = document.getElementById("noteList");
+		list.innerHTML = "";
+		if (!notes.length) {
+			list.innerHTML =
+				'<div class="empty" style="padding:14px"><div>No notes yet.</div></div>';
+		}
+		notes.forEach((n) => {
+			const el = document.createElement("div");
+			el.className = "note-item" + (n.id === activeId ? " active" : "");
+			el.innerHTML = `<h4>${escapeHtml(n.title || "Untitled")}</h4><p>${escapeHtml((n.body || "Empty note").slice(0, 60))}</p>`;
+			el.onclick = () => open(n.id);
+			list.appendChild(el);
+		});
+	}
+	function escapeHtml(s) {
+		return String(s).replace(
+			/[&<>"]/g,
+			(c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+		);
+	}
+
+	function open(id) {
+		activeId = id;
+		const n = notes.find((x) => x.id === id);
+		document.getElementById("noteEmpty").classList.add("hidden");
+		document.getElementById("noteForm").classList.remove("hidden");
+		document.getElementById("noteTitle").value = n.title || "";
+		document.getElementById("noteBody").value = n.body || "";
+		renderList();
+	}
+
+	async function save() {
+		if (activeId == null) return;
+		const n = notes.find((x) => x.id === activeId);
+		n.title = document.getElementById("noteTitle").value || "Untitled";
+		n.body = document.getElementById("noteBody").value;
+		document.getElementById("noteSaved").textContent = "Saving…";
+		await api("/api/notes/" + activeId, "PATCH", {
+			title: n.title,
+			body: n.body,
+		});
+		document.getElementById("noteSaved").textContent = "Saved";
+		renderList();
+	}
+
+	["noteTitle", "noteBody"].forEach((id) => {
+		document.getElementById(id).addEventListener("input", () => {
+			document.getElementById("noteSaved").textContent = "Saving…";
+			clearTimeout(saveTimer);
+			saveTimer = setTimeout(save, 700);
+		});
+	});
+
+	document.getElementById("newNote").onclick = async () => {
+		const res = await api("/api/notes", "POST");
+		notes.unshift({ id: res.id, title: "Untitled note", body: "" });
+		renderList();
+		open(res.id);
+		document.getElementById("noteTitle").focus();
+		toast("Note created");
+	};
+
+	renderList();
+	if (notes.length) open(notes[0].id);
+</script>
+{% endblock %}

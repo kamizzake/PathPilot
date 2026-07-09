@@ -1,0 +1,47 @@
+{% extends "base.html" %} {% block title %}Milestones{% endblock %} {% block
+content %}
+<div class="topbar rise">
+	<div>
+		<div class="eyebrow">{{ roadmap.name }}</div>
+		<h1>Milestones</h1>
+		<div class="sub">
+			{{ roadmap.completed_count }} complete · {{ roadmap.milestones|length -
+			roadmap.completed_count }} remaining
+		</div>
+	</div>
+	<div class="topbar-actions">
+		<a
+			href="{{ url_for('roadmap_detail', rid=roadmap.id) }}"
+			class="btn btn-ghost"
+			><i data-lucide="git-branch"></i> Path view</a
+		>
+	</div>
+</div>
+
+<div class="ms-grid stagger">
+	{% for m in roadmap.milestones %}
+	<a href="{{ url_for('milestone_detail', mid=m.id) }}" class="card ms-card">
+		<span class="status-dot status-{{ m.status }}"></span>
+		<div class="ms-top">
+			<span class="ms-idx">{{ '%02d' % loop.index }}</span>
+		</div>
+		<h3>{{ m.title }}</h3>
+		<div class="pillar-tag">{{ m.pillar }}</div>
+		<div class="ms-stats">
+			<span><i data-lucide="signal"></i> {{ m.difficulty }}</span>
+			<span><i data-lucide="clock"></i> {{ m.hours }}h</span>
+		</div>
+		<div class="ms-foot">
+			<div class="bar {{ 'success' if m.status=='completed' }}">
+				<span data-w="{{ m.percent }}"></span>
+			</div>
+			<span
+				class="pct"
+				style="color:{{ 'var(--success)' if m.status=='completed' else 'var(--accent)' }}"
+				>{{ m.percent }}%</span
+			>
+		</div>
+	</a>
+	{% endfor %}
+</div>
+{% endblock %}

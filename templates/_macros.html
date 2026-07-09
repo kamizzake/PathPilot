@@ -1,0 +1,20 @@
+{% macro ring(percent, size=44, stroke=5) %} {% set r = (size / 2) - stroke %}
+{% set circ = 2 * 3.14159265 * r %}
+<div
+	class="ring"
+	style="--sz:{{ size }}px; --p:{{ percent }}; --circ:{{ circ }}">
+	<svg viewBox="0 0 {{ size }} {{ size }}">
+		<circle
+			class="track"
+			cx="{{ size/2 }}"
+			cy="{{ size/2 }}"
+			r="{{ r }}"></circle>
+		<circle
+			class="val"
+			cx="{{ size/2 }}"
+			cy="{{ size/2 }}"
+			r="{{ r }}"></circle>
+	</svg>
+	<b style="font-size:{{ (size * 0.19)|round(1) }}px">{{ percent }}%</b>
+</div>
+{% endmacro %}

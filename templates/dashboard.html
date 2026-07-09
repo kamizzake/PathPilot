@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% from "_macros.html" import ring %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="topbar rise">
+  <div>
+    <div class="eyebrow">{{ now.strftime('%A, %B %d') }}</div>
+    <h1>Good to see you, {{ profile.name }}.</h1>
+    <div class="sub">{{ active_roadmap_meta.name }} · {{ roadmap.completed_count }}/{{ roadmap.milestones|length }} milestones complete</div>
+  </div>
+  <div class="topbar-actions">
+    <a href="{{ url_for('roadmaps') }}" class="btn btn-ghost"><i data-lucide="route"></i> Switch roadmap</a>
+    {% if current %}<a href="{{ url_for('milestone_detail', mid=current.id) }}" class="btn btn-primary"><i data-lucide="play"></i> Resume</a>{% endif %}
+  </div>
+</div>
+
+<div class="dash-grid stagger">
+  <!-- TODAY'S FOCUS -->
+  <section class="card focus-card g-focus">
+    <div class="eyebrow"><i data-lucide="target" style="width:13px;height:13px;vertical-align:-2px"></i> Today's focus</div>
+    {% if current %}
+    <h2>{{ current.title }}</h2>
+    <p class="goal">{{ current.learning_goal }}</p>
+    <div class="focus-meta">
+      <span class="chip"><i data-lucide="signal"></i> {{ current.difficulty }}</span>
+      <span class="chip"><i data-lucide="clock"></i> {{ current.hours }}h</span>
+      <span class="chip"><i data-lucide="layers"></i> {{ current.pillar }}</span>
+    </div>
+    <div class="focus-progress">
+      <div class="row"><span>Progress</span><span>{{ current.percent }}%</span></div>
+      <div class="bar"><span data-w="{{ current.percent }}"></span></div>
+      <a href="{{ url_for('milestone_detail', mid=current.id) }}" class="btn"><i data-lucide="arrow-right"></i> Open milestone</a>
+    </div>
+    {% else %}
+    <h2>All clear ✦</h2>
+    <p class="goal">You've completed every milestone on this roadmap. Time to pick a new path.</p>
+    {% endif %}
+  </section>
+
+  <!-- STUDY STREAK -->
+  <section class="card streak-card g-streak">
+    <div class="card-h" style="width:100%"><h3><i data-lucide="flame"></i> Streak</h3>
+      <span class="streak-best">Best {{ streak.longest }}</span>
+    </div>
+    <div class="streak-body">
+      <div class="streak-flame {{ 'lit' if streak.streak else '' }}"><i data-lucide="flame"></i></div>
+      <div>
+        <div class="streak-num" id="streakNum">{{ streak.streak }}</div>
+        <div class="stat-label">day{{ '' if streak.streak == 1 else 's' }} in a row</div>
+      </div>
+    </div>
+    <div class="streak-week" id="streakWeek">
+      {% for d in streak.week %}
+        <div class="day {{ 'on' if d.active }} {{ 'today' if d.today }}">
+          <span class="d-lbl">{{ d.label }}</span>
+          <span class="d-dot"></span>
+        </div>
+      {% endfor %}
+    </div>
+    <button class="btn btn-primary streak-checkin {{ 'done' if streak.checked_in }}"
+            id="checkinBtn" {{ 'disabled' if streak.checked_in }}>
+      <i data-lucide="{{ 'check' if streak.checked_in else 'flame' }}"></i>
+      <span>{{ "Checked in today" if streak.checked_in else "Log today" }}</span>
+    </button>
+  </section>
+
+  <!-- CAREER PILLARS -->
+  <section class="card g-pillars">
+    <div class="card-h"><h3><i data-lucide="columns-3"></i> Career pillars</h3></div>
+    <div class="pillars-list">
+      {% for p in pillars[:6] %}
+      <div class="pillar-row">
+        {{ ring(p.percent, 42, 5) }}
+        <span class="name">{{ p.name }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- CURRENT PROJECT -->
+  <section class="card g-project proj-mini">
+    <div class="card-h"><h3><i data-lucide="folder-git-2"></i> Current project</h3><a href="{{ url_for('projects') }}" class="see-all">View board</a></div>
+    {% if current_project %}
+      <h4>{{ current_project.title }}</h4>
+      <p class="desc">{{ current_project.description }}</p>
+      <div class="focus-progress" style="margin-top:auto">
+        <div class="bar"><span data-w="{{ current_project.percent }}"></span></div>
+      </div>
+    {% else %}
+      <div class="empty"><i data-lucide="folder-plus"></i><div>No active project yet.</div></div>
+    {% endif %}
+  </section>
+
+  <!-- QUICK ACTIONS -->
+  <section class="card g-actions">
+    <div class="card-h"><h3><i data-lucide="zap"></i> Quick actions</h3></div>
+    <div class="qa-grid">
+      {% if current %}<a href="{{ url_for('milestone_detail', mid=current.id) }}" class="qa"><i data-lucide="play"></i> Resume milestone</a>{% endif %}
+      <a href="{{ url_for('notes') }}" class="qa"><i data-lucide="pen-line"></i> New note</a>
+      <a href="{{ url_for('projects') }}" class="qa"><i data-lucide="plus-square"></i> Add project</a>
+      <a href="{{ url_for('statistics') }}" class="qa"><i data-lucide="trending-up"></i> View stats</a>
+    </div>
+  </section>
+
+  <!-- UPCOMING DELIVERABLES -->
+  <section class="card g-upcoming">
+    <div class="card-h"><h3><i data-lucide="list-checks"></i> Upcoming</h3><a href="{{ url_for('milestones') }}" class="see-all">All milestones</a></div>
+    <div class="up-list">
+      {% for m in upcoming %}
+      <a href="{{ url_for('milestone_detail', mid=m.id) }}" class="up-item">
+        <span class="up-dot" style="background:{{ 'var(--warning)' if m.status=='in_progress' else 'var(--ink-4)' }}"></span>
+        <span class="t">{{ m.title }}</span>
+        <span class="h">{{ m.hours }}h</span>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- RECENT ACTIVITY -->
+  <section class="card g-activity">
+    <div class="card-h"><h3><i data-lucide="activity"></i> Recent activity</h3></div>
+    <div class="act-list">
+      {% for a in activity %}
+      <div class="act-item">
+        <div class="act-icon"><i data-lucide="{{ 'check' if a.kind=='complete' else 'git-commit-horizontal' if a.kind=='progress' else 'folder' if a.kind=='project' else 'sparkles' }}"></i></div>
+        <span class="lbl">{{ a.label }}</span>
+      </div>
+      {% else %}
+      <div class="empty"><i data-lucide="history"></i><div>Your activity will appear here.</div></div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+animateRings();
+
+const checkinBtn = document.getElementById('checkinBtn');
+if (checkinBtn) {
+  checkinBtn.addEventListener('click', async () => {
+    checkinBtn.disabled = true;
+    const res = await api('/api/checkin', 'POST');
+    if (res && res.ok) {
+      document.getElementById('streakNum').textContent = res.streak;
+      document.querySelector('.streak-flame')?.classList.add('lit');
+      checkinBtn.classList.add('done');
+      checkinBtn.querySelector('span').textContent = 'Checked in today';
+      checkinBtn.querySelector('i').setAttribute('data-lucide', 'check');
+      // repaint the week strip
+      const week = document.getElementById('streakWeek');
+      if (week && res.week) {
+        week.innerHTML = res.week.map(d =>
+          `<div class="day ${d.active ? 'on' : ''} ${d.today ? 'today' : ''}">
+             <span class="d-lbl">${d.label}</span><span class="d-dot"></span></div>`
+        ).join('');
+      }
+      if (window.refreshIcons) window.refreshIcons();
+      toast('Streak updated — ' + res.streak + ' days');
+    } else {
+      checkinBtn.disabled = false;
+    }
+  });
+}
+</script>
+{% endblock %}
